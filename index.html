@@ -2,8 +2,8 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Captain Abdelrahman - Professional Trainer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Captain Abdelrahman - 2026</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
@@ -11,267 +11,313 @@
             font-family: 'Cairo', sans-serif;
             background-color: #0a0a0a;
             color: #ffffff;
-            overflow-x: hidden;
+            height: 100vh;
+            height: 100dvh; /* Dynamic viewport height for mobile browsers */
+            overflow: hidden; /* منع السكرول نهائياً */
+            display: flex;
+            flex-direction: column;
         }
-        .step-card {
-            display: none;
-        }
-        .step-card.active {
-            display: block;
-            animation: slideIn 0.4s ease-out;
-        }
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-20px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
+        .step-card { display: none; }
+        .step-card.active { display: block; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
         .option-btn {
             transition: all 0.2s ease;
             border: 1px solid #222;
             background-color: #151515;
+            text-align: right;
+            width: 100%;
+            padding: 0.75rem 1rem; /* تقليل البادينج قليلاً لضمان عدم السكرول */
+            border-radius: 0.75rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
         }
-        .option-btn:hover {
-            border-color: #fbbf24;
-            background-color: #222;
-            transform: translateY(-2px);
+        .option-btn:hover { border-color: #fbbf24; background-color: #1a1a1a; }
+        .option-btn.selected { border-color: #fbbf24; background-color: #fbbf24; color: black; }
+        
+        .input-error {
+            border-color: #ef4444 !important;
+            animation: shake 0.3s ease-in-out;
         }
-        .option-btn.selected {
-            border-color: #fbbf24;
-            background-color: #fbbf24;
-            color: #000;
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
         }
-        .whatsapp-btn {
-            background-color: #25D366;
-            transition: all 0.3s ease;
+
+        select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23666'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: left 1rem center;
+            background-size: 1.2em;
         }
-        .whatsapp-btn:hover {
-            background-color: #1ebd5a;
-            box-shadow: 0 0 20px rgba(37, 211, 102, 0.4);
+        .hidden-input { display: none; }
+        .hidden-input.show { display: block; animation: slideDown 0.3s ease; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* ضبط الحاويات لضمان عدم الخروج عن مساحة الشاشة */
+        .app-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+            width: 100%;
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col items-center py-10 px-4">
+<body class="p-4">
 
-    <!-- Hero Section -->
-    <div class="text-center mb-10 max-w-2xl">
-        <h1 class="text-5xl font-black text-yellow-500 mb-4">كابتن عبد الرحمن</h1>
-        <p class="text-xl text-gray-300">نظام تدريبي متكامل مبني على أسس علمية. أجب على الأسئلة للحصول على خطتك المخصصة لعام 2026.</p>
+    <!-- Top Bar -->
+    <div class="w-full max-w-md mx-auto flex justify-center items-center py-2">
+        <span class="text-yellow-500 font-bold tracking-tighter text-xl uppercase">C. ABDELRAHMAN</span>
     </div>
 
-    <!-- Main Container -->
-    <div class="w-full max-w-xl bg-[#111] rounded-3xl p-8 shadow-2xl border border-white/5 relative overflow-hidden">
-        
-        <!-- Progress -->
-        <div class="flex justify-between items-center mb-6 text-xs text-gray-500 font-bold uppercase tracking-widest">
-            <span id="step-label">الخطوة 1 من 6</span>
-            <span id="step-percent">15%</span>
-        </div>
-        <div class="w-full bg-gray-800 h-1.5 rounded-full mb-10">
-            <div id="progress" class="bg-yellow-500 h-full transition-all duration-500 rounded-full" style="width: 15%;"></div>
+    <div class="app-main">
+        <!-- Motivation Message -->
+        <div class="text-center mb-4 bg-yellow-500/10 border border-yellow-500/20 py-1.5 px-4 rounded-full w-fit">
+            <p id="motivation-msg" class="text-yellow-500 text-xs font-bold">💪 خطوة واحدة تفصلك عن جسم أحلامك، ابدأ الآن!</p>
         </div>
 
-        <div id="quiz-form">
-            <!-- Step 1: Basic Info (New) -->
-            <div id="step-1" class="step-card active text-right">
-                <h2 class="text-2xl font-bold mb-6">لنبدأ بالأساسيات 👋</h2>
-                <div class="space-y-5">
-                    <div>
-                        <label class="block text-sm text-gray-400 mb-2">الاسم بالكامل</label>
-                        <input type="text" id="user-name" placeholder="أدخل اسمك هنا" class="w-full p-4 rounded-xl bg-gray-900 border border-gray-800 outline-none focus:border-yellow-500 transition-colors">
-                    </div>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm text-gray-400 mb-2">السن</label>
-                            <input type="number" id="user-age" placeholder="عمرك" class="w-full p-4 rounded-xl bg-gray-900 border border-gray-800 outline-none focus:border-yellow-500">
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-400 mb-2">النوع</label>
-                            <select id="user-gender" class="w-full p-4 rounded-xl bg-gray-900 border border-gray-800 outline-none focus:border-yellow-500 appearance-none">
+        <!-- Hero Title -->
+        <div class="text-center mb-4">
+            <h1 class="text-2xl font-black mb-1">رحلة التغيير 2026</h1>
+            <p class="text-xs text-gray-400">بياناتك هي مفتاح تصميم خطتك المخصصة</p>
+        </div>
+
+        <!-- App Container -->
+        <div class="w-full max-w-md bg-[#111] rounded-2xl p-5 shadow-2xl border border-white/5 overflow-hidden">
+            
+            <!-- Progress Bar -->
+            <div class="w-full bg-gray-800 h-1 rounded-full mb-5">
+                <div id="progress" class="bg-yellow-500 h-full transition-all duration-500 w-[25%]"></div>
+            </div>
+
+            <div id="quiz-flow">
+                <!-- Step 1: Info -->
+                <div id="step-1" class="step-card active text-right">
+                    <h2 class="text-lg font-bold mb-4 text-yellow-500">المعلومات الشخصية</h2>
+                    <div class="space-y-3">
+                        <input type="text" id="user-name" oninput="this.classList.remove('input-error')" placeholder="الاسم الكامل" class="w-full p-3.5 rounded-xl bg-gray-900 border border-gray-800 outline-none focus:border-yellow-500 text-right text-sm">
+                        
+                        <div class="grid grid-cols-2 gap-3">
+                            <input type="number" id="user-age" oninput="this.classList.remove('input-error')" placeholder="السن" class="w-full p-3.5 rounded-xl bg-gray-900 border border-gray-800 outline-none focus:border-yellow-500 text-right text-sm">
+                            <select id="user-gender" onchange="this.classList.remove('input-error')" class="w-full p-3.5 rounded-xl bg-gray-900 border border-gray-800 outline-none focus:border-yellow-500 text-right appearance-none text-sm">
+                                <option value="" disabled selected>اختر النوع</option>
                                 <option value="ذكر">ذكر</option>
                                 <option value="أنثى">أنثى</option>
                             </select>
                         </div>
-                    </div>
-                    <button onclick="saveStep1()" class="w-full bg-white text-black font-bold p-4 rounded-xl mt-4 hover:bg-yellow-500 transition-colors">التالي</button>
-                </div>
-            </div>
 
-            <!-- Step 2: Goal -->
-            <div id="step-2" class="step-card text-right">
-                <h2 class="text-2xl font-bold mb-6">ما هو هدفك الرئيسي؟ 🎯</h2>
-                <div class="space-y-3">
-                    <button onclick="nextStep(2, 'goal', 'تنشيف وحرق دهون')" class="option-btn w-full p-5 rounded-2xl flex justify-between items-center group">
-                        <span>تنشيف وحرق دهون</span> <span class="group-hover:scale-125 transition-transform">🔥</span>
-                    </button>
-                    <button onclick="nextStep(2, 'goal', 'تضخيم وبناء عضلي')" class="option-btn w-full p-5 rounded-2xl flex justify-between items-center group">
-                        <span>تضخيم وبناء عضلي</span> <span class="group-hover:scale-125 transition-transform">💪</span>
-                    </button>
-                    <button onclick="nextStep(2, 'goal', 'تحسين اللياقة والصحة العامة')" class="option-btn w-full p-5 rounded-2xl flex justify-between items-center group">
-                        <span>تحسين اللياقة والصحة</span> <span class="group-hover:scale-125 transition-transform">🏃‍♂️</span>
-                    </button>
-                </div>
-                <button onclick="prevStep(2)" class="mt-8 text-gray-500 hover:text-white transition-colors">← رجوع</button>
-            </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <input type="number" id="user-weight" oninput="this.classList.remove('input-error')" placeholder="الوزن (كجم)" class="w-full p-3.5 rounded-xl bg-gray-900 border border-gray-800 outline-none focus:border-yellow-500 text-right text-sm">
+                            <input type="number" id="user-height" oninput="this.classList.remove('input-error')" placeholder="الطول (سم)" class="w-full p-3.5 rounded-xl bg-gray-900 border border-gray-800 outline-none focus:border-yellow-500 text-right text-sm">
+                        </div>
 
-            <!-- Step 3: Experience Level -->
-            <div id="step-3" class="step-card text-right">
-                <h2 class="text-2xl font-bold mb-6">خبرتك في التمرين؟ 🏋️</h2>
-                <div class="space-y-3">
-                    <button onclick="nextStep(3, 'level', 'مبتدئ (0 - 6 شهور)')" class="option-btn w-full p-5 rounded-2xl flex justify-between items-center group">
-                        <span>مبتدئ (0 - 6 شهور)</span> <span>🌱</span>
-                    </button>
-                    <button onclick="nextStep(3, 'level', 'متوسط (سنة - سنتين)')" class="option-btn w-full p-5 rounded-2xl flex justify-between items-center group">
-                        <span>متوسط (سنة - سنتين)</span> <span>⚡</span>
-                    </button>
-                    <button onclick="nextStep(3, 'level', 'متقدم (أكثر من 3 سنوات)')" class="option-btn w-full p-5 rounded-2xl flex justify-between items-center group">
-                        <span>متقدم (أكثر من 3 سنوات)</span> <span>🏆</span>
-                    </button>
-                </div>
-                <button onclick="prevStep(3)" class="mt-8 text-gray-500 hover:text-white transition-colors">← رجوع</button>
-            </div>
-
-            <!-- Step 4: Medical History (New Dedicated Page) -->
-            <div id="step-4" class="step-card text-right">
-                <h2 class="text-2xl font-bold mb-2 text-red-500">التاريخ الصحي والأمراض 🏥</h2>
-                <p class="text-gray-400 mb-6 text-sm">سلامتك أولاً. هل تعاني من أي من الأمراض التالية؟</p>
-                <div class="grid grid-cols-1 gap-3 mb-6">
-                    <div class="flex items-center gap-3 p-4 bg-gray-900 rounded-xl border border-gray-800">
-                        <input type="checkbox" id="m-diabetes" class="w-5 h-5 accent-yellow-500">
-                        <label for="m-diabetes">السكر</label>
-                    </div>
-                    <div class="flex items-center gap-3 p-4 bg-gray-900 rounded-xl border border-gray-800">
-                        <input type="checkbox" id="m-pressure" class="w-5 h-5 accent-yellow-500">
-                        <label for="m-pressure">ضغط الدم</label>
-                    </div>
-                    <div class="flex items-center gap-3 p-4 bg-gray-900 rounded-xl border border-gray-800">
-                        <input type="checkbox" id="m-heart" class="w-5 h-5 accent-yellow-500">
-                        <label for="m-heart">مشاكل في القلب</label>
-                    </div>
-                    <div class="flex items-center gap-3 p-4 bg-gray-900 rounded-xl border border-gray-800">
-                        <input type="checkbox" id="m-asthma" class="w-5 h-5 accent-yellow-500">
-                        <label for="m-asthma">حساسية صدر / ربو</label>
+                        <button onclick="checkStep1()" class="w-full bg-yellow-500 text-black font-bold p-3.5 rounded-xl mt-1 hover:opacity-90 transition-all text-sm">التالي</button>
                     </div>
                 </div>
-                <button onclick="saveStep4()" class="w-full bg-white text-black font-bold p-4 rounded-xl hover:bg-yellow-500 transition-colors">التالي</button>
-                <button onclick="prevStep(4)" class="mt-6 text-gray-500 hover:text-white transition-colors block">← رجوع</button>
-            </div>
 
-            <!-- Step 5: Environment -->
-            <div id="step-5" class="step-card text-right">
-                <h2 class="text-2xl font-bold mb-6">أين ستتمرن؟ 📍</h2>
-                <div class="space-y-3">
-                    <button onclick="nextStep(5, 'place', 'نادي رياضي (جيم)')" class="option-btn w-full p-5 rounded-2xl flex justify-between items-center">
-                        <span>في الجيم</span> <span>🏢</span>
-                    </button>
-                    <button onclick="nextStep(5, 'place', 'تمارين منزلية')" class="option-btn w-full p-5 rounded-2xl flex justify-between items-center">
-                        <span>في المنزل</span> <span>🏠</span>
-                    </button>
-                </div>
-                <button onclick="prevStep(5)" class="mt-8 text-gray-500 hover:text-white transition-colors">← رجوع</button>
-            </div>
-
-            <!-- Step 6: Final Review -->
-            <div id="step-6" class="step-card text-right">
-                <h2 class="text-2xl font-bold mb-2">آخر خطوة! 🏁</h2>
-                <p class="text-gray-400 mb-6">أدخل وزنك الحالي وسيتم تحويلك مباشرة للواتساب</p>
-                <div class="space-y-4">
-                    <input type="number" id="user-weight" placeholder="وزنك الحالي بالكيلو" class="w-full p-4 rounded-xl bg-gray-900 border border-gray-800 outline-none focus:border-yellow-500">
+                <!-- Step 2: Goal -->
+                <div id="step-2" class="step-card text-right">
+                    <h2 class="text-lg font-bold mb-4 text-yellow-500">ما هو هدفك الأساسي؟</h2>
+                    <div class="space-y-2" id="goal-options">
+                        <button onclick="selectGoal(this, 'تنشيف')" class="option-btn"><span>تنشيف</span> <span>🔥</span></button>
+                        <button onclick="selectGoal(this, 'تضخيم')" class="option-btn"><span>تضخيم</span> <span>💪</span></button>
+                        <button onclick="selectGoal(this, 'تخسيس')" class="option-btn"><span>تخسيس</span> <span>📉</span></button>
+                        <button onclick="selectGoal(this, 'علاج من أمراض')" class="option-btn"><span>علاج من أمراض</span> <span>🩺</span></button>
+                        <button onclick="selectGoal(this, 'تثبيت وزن')" class="option-btn"><span>تثبيت وزن</span> <span>⚖️</span></button>
+                        <button onclick="selectGoal(this, 'أخرى')" class="option-btn"><span>أخرى</span> <span>✨</span></button>
+                    </div>
                     
-                    <button onclick="submitFinal()" class="whatsapp-btn w-full text-white font-black p-5 rounded-2xl flex justify-center items-center gap-3 text-lg">
-                        <span>إرسال البيانات وبدء التحول</span>
-                        <svg class="w-6 h-6 fill-white" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766 0-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217s.231.006.332.013c.101.007.242-.038.379.297.136.334.468 1.141.509 1.226.041.085.068.184.01.299-.059.117-.088.19-.174.29-.086.101-.181.226-.259.303-.087.085-.177.177-.076.35.101.173.448.736.96 1.192.659.587 1.215.77 1.388.856.173.086.274.072.376-.045.101-.117.433-.506.549-.679.116-.173.231-.144.39-.086.158.058 1.011.477 1.184.563.173.087.288.13.332.202.043.072.043.419-.101.824z"/></svg>
-                    </button>
+                    <div id="goal-other-container" class="hidden-input mt-3">
+                        <textarea id="goal-other-text" oninput="this.classList.remove('input-error')" placeholder="يرجى كتابة هدفك بالتفصيل هنا..." class="w-full p-3 rounded-xl bg-gray-900 border border-yellow-500 outline-none text-right h-20 text-sm"></textarea>
+                    </div>
+
+                    <button onclick="checkStep2()" class="w-full bg-yellow-500 text-black font-bold p-3.5 rounded-xl mt-4 hover:opacity-90 transition-all text-sm">التالي</button>
+                    <button onclick="goTo(1)" class="mt-2 text-gray-500 text-xs w-full">← العودة</button>
                 </div>
-                <button onclick="prevStep(6)" class="mt-8 text-gray-500 hover:text-white transition-colors">← رجوع</button>
+
+                <!-- Step 3: Medical -->
+                <div id="step-3" class="step-card text-right">
+                    <h2 class="text-lg font-bold mb-2 text-yellow-500">الحالة الصحية</h2>
+                    <p class="text-[10px] text-gray-500 mb-3">هل تعاني من أي من الآتي؟</p>
+                    <div class="space-y-1.5">
+                        <label class="flex items-center gap-3 p-2.5 bg-gray-900 rounded-lg border border-gray-800 cursor-pointer text-sm">
+                            <input type="checkbox" id="d-1" class="accent-yellow-500 w-4 h-4"> <span>ضغط / سكر</span>
+                        </label>
+                        <label class="flex items-center gap-3 p-2.5 bg-gray-900 rounded-lg border border-gray-800 cursor-pointer text-sm">
+                            <input type="checkbox" id="d-2" class="accent-yellow-500 w-4 h-4"> <span>إصابات ملاعب</span>
+                        </label>
+                        <label class="flex items-center gap-3 p-2.5 bg-gray-900 rounded-lg border border-gray-800 cursor-pointer text-sm">
+                            <input type="checkbox" id="d-3" class="accent-yellow-500 w-4 h-4"> <span>ضيق تنفس</span>
+                        </label>
+                        <label class="flex items-center gap-3 p-2.5 bg-gray-900 rounded-lg border border-gray-800 cursor-pointer text-sm">
+                            <input type="checkbox" id="d-4" onchange="toggleMedicalOther()" class="accent-yellow-500 w-4 h-4"> <span>أخرى</span>
+                        </label>
+                    </div>
+
+                    <div id="medical-other-container" class="hidden-input mt-3">
+                        <textarea id="medical-other-text" oninput="this.classList.remove('input-error')" placeholder="يرجى شرح الحالة الصحية بالتفصيل..." class="w-full p-3 rounded-xl bg-gray-900 border border-yellow-500 outline-none text-right h-20 text-sm"></textarea>
+                    </div>
+
+                    <button onclick="checkStep3()" class="w-full bg-white text-black font-bold p-3.5 rounded-xl mt-4 text-sm">التالي</button>
+                    <button onclick="goTo(2)" class="mt-2 text-gray-500 text-xs block w-full text-center">← العودة</button>
+                </div>
+
+                <!-- Step 4: Submit -->
+                <div id="step-4" class="step-card text-right">
+                    <h2 class="text-lg font-bold mb-3 text-yellow-500">مرحباً بك في الفريق!</h2>
+                    <p class="text-gray-400 text-xs mb-5">لقد انتهيت من تعبئة البيانات، اضغط على الزر أدناه لإرسالها وبدء التحدي.</p>
+                    <div class="space-y-3">
+                        <button onclick="sendToWhatsApp()" class="w-full bg-[#25D366] text-white font-bold p-4 rounded-xl flex justify-center items-center gap-2 shadow-lg hover:scale-[1.02] transition-transform text-sm">
+                            إرسال البيانات للواتساب
+                        </button>
+                        <button onclick="location.reload()" class="w-full bg-transparent border border-gray-700 text-gray-400 p-4 rounded-xl hover:text-white transition-all text-sm">
+                            العودة للرئيسية
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Footer -->
-    <footer class="mt-10 text-gray-500 text-center text-sm">
-        <p>© 2026 Captain Abdelrahman Training</p>
-        <p class="text-xs mt-1">Health is Wealth | استثمر في نفسك</p>
+    <footer class="py-2 text-gray-600 text-[10px] text-center uppercase tracking-widest">
+        © 2026 Captain Abdelrahman • Personalized Coaching
     </footer>
 
     <script>
-        const userData = {
-            name: '', age: '', gender: '',
-            goal: '', level: '',
-            diseases: [],
-            place: '', weight: ''
+        let data = { 
+            name:'', age:'', gender:'', 
+            weight:'', height:'',
+            goal:'', goalDetails:'', 
+            medical:[], medicalDetails:'' 
         };
-
-        const totalSteps = 6;
         const phone = "201115748421";
 
-        function updateUI(step) {
-            document.getElementById('step-label').innerText = `الخطوة ${step} من ${totalSteps}`;
-            const percent = Math.round((step / totalSteps) * 100);
-            document.getElementById('step-percent').innerText = `${percent}%`;
-            document.getElementById('progress').style.width = `${percent}%`;
-        }
+        const motivations = [
+            "💪 خطوة واحدة تفصلك عن جسم أحلامك، ابدأ الآن!",
+            "🎯 حدد هدفك بوضوح لنصل إليه معاً",
+            "🏥 سلامتك هي أهم أولوياتنا، أخبرنا عن حالتك",
+            "🏁 أنت على بعد ضغطة واحدة من البداية الحقيقية!"
+        ];
 
-        function saveStep1() {
-            userData.name = document.getElementById('user-name').value;
-            userData.age = document.getElementById('user-age').value;
-            userData.gender = document.getElementById('user-gender').value;
-
-            if(!userData.name || !userData.age) {
-                alert("برجاء إكمال البيانات الأساسية");
-                return;
-            }
-            
-            goToStep(2);
-        }
-
-        function saveStep4() {
-            userData.diseases = [];
-            if(document.getElementById('m-diabetes').checked) userData.diseases.push("السكر");
-            if(document.getElementById('m-pressure').checked) userData.diseases.push("الضغط");
-            if(document.getElementById('m-heart').checked) userData.diseases.push("مشاكل القلب");
-            if(document.getElementById('m-asthma').checked) userData.diseases.push("الربو");
-            
-            if(userData.diseases.length === 0) userData.diseases.push("لا يوجد");
-            
-            goToStep(5);
-        }
-
-        function nextStep(current, key, value) {
-            userData[key] = value;
-            goToStep(current + 1);
-        }
-
-        function prevStep(current) {
-            goToStep(current - 1);
-        }
-
-        function goToStep(step) {
+        function goTo(step) {
             document.querySelectorAll('.step-card').forEach(s => s.classList.remove('active'));
             document.getElementById(`step-${step}`).classList.add('active');
-            updateUI(step);
+            document.getElementById('progress').style.width = (step/4*100) + '%';
+            document.getElementById('motivation-msg').innerText = motivations[step-1];
         }
 
-        function submitFinal() {
-            userData.weight = document.getElementById('user-weight').value;
-            if(!userData.weight) {
-                alert("برجاء إدخال الوزن");
+        function highlightError(id) {
+            const el = document.getElementById(id);
+            el.classList.add('input-error');
+        }
+
+        function checkStep1() {
+            let hasError = false;
+            const fields = ['user-name', 'user-age', 'user-gender', 'user-weight', 'user-height'];
+            
+            fields.forEach(f => {
+                const el = document.getElementById(f);
+                if(!el.value) {
+                    highlightError(f);
+                    hasError = true;
+                }
+            });
+
+            if(hasError) return;
+
+            data.name = document.getElementById('user-name').value;
+            data.age = document.getElementById('user-age').value;
+            data.gender = document.getElementById('user-gender').value;
+            data.weight = document.getElementById('user-weight').value;
+            data.height = document.getElementById('user-height').value;
+            goTo(2);
+        }
+
+        function selectGoal(btn, val) {
+            document.querySelectorAll('#goal-options button').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            data.goal = val;
+            
+            const container = document.getElementById('goal-other-container');
+            if(val === 'أخرى') {
+                container.classList.add('show');
+            } else {
+                container.classList.remove('show');
+            }
+        }
+
+        function checkStep2() {
+            if(!data.goal) {
+                document.getElementById('goal-options').classList.add('input-error');
+                setTimeout(() => document.getElementById('goal-options').classList.remove('input-error'), 1000);
                 return;
             }
+            if(data.goal === 'أخرى') {
+                data.goalDetails = document.getElementById('goal-other-text').value;
+                if(!data.goalDetails.trim()) {
+                    highlightError('goal-other-text');
+                    return;
+                }
+            } else {
+                data.goalDetails = '';
+            }
+            goTo(3);
+        }
 
-            const message = `السلام عليكم كابتن عبد الرحمن.. أرغب في الاشتراك بالتدريب الأونلاين.
-بياناتي كالتالي:
+        function toggleMedicalOther() {
+            const container = document.getElementById('medical-other-container');
+            if(document.getElementById('d-4').checked) {
+                container.classList.add('show');
+            } else {
+                container.classList.remove('show');
+            }
+        }
 
-👤 الاسم: ${userData.name}
-🎂 السن: ${userData.age} سنة (${userData.gender})
-⚖️ الوزن الحالي: ${userData.weight} كجم
-🎯 الهدف الرئيسي: ${userData.goal}
-📊 الخبرة: ${userData.level}
-🏥 التاريخ الصحي: ${userData.diseases.join(' - ')}
-🏠 مكان التمرين: ${userData.place}
+        function checkStep3() {
+            data.medical = [];
+            if(document.getElementById('d-1').checked) data.medical.push("ضغط/سكر");
+            if(document.getElementById('d-2').checked) data.medical.push("إصابات ملاعب");
+            if(document.getElementById('d-3').checked) data.medical.push("ضيق تنفس");
+            
+            if(document.getElementById('d-4').checked) {
+                data.medicalDetails = document.getElementById('medical-other-text').value;
+                if(!data.medicalDetails.trim()) {
+                    highlightError('medical-other-text');
+                    return;
+                }
+                data.medical.push("حالات أخرى");
+            } else {
+                data.medicalDetails = '';
+            }
+            
+            if(data.medical.length === 0) data.medical.push("سليم");
+            goTo(4);
+        }
 
-أتمنى تزويدي بتفاصيل الباقات والأسعار.`;
+        function sendToWhatsApp() {
+            let medicalInfo = data.medical.join(' - ');
+            if(data.medicalDetails) medicalInfo += ` (${data.medicalDetails})`;
+            
+            let goalInfo = data.goal;
+            if(data.goalDetails) goalInfo += ` (${data.goalDetails})`;
 
-            const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
-            window.location.href = url;
+            const msg = `السلام عليكم كابتن عبد الرحمن، حابب اشترك معاك.
+            
+👤 الأسم: ${data.name}
+🎂 السن: ${data.age} (${data.gender})
+⚖️ الوزن: ${data.weight} كجم
+📏 الطول: ${data.height} سم
+🎯 الهدف: ${goalInfo}
+🏥 الحالة الصحية: ${medicalInfo}`;
+            
+            window.location.href = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
         }
     </script>
 </body>
